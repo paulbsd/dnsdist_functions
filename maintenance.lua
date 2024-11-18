@@ -3,6 +3,13 @@
 -- showServersStatus('server name') -- matching by mattern the server name
 -- setMaintenance('server name', 'DOWN') -- set servers matching pattern down
 
+function load_snippet(filename)
+  f = io.open(filename,"r")
+  code = f:read("a*")
+  bc,e = load(code)
+  pcall(bc)
+end
+
 function getServersByPattern(pattern)
   local servers = {}
   for _,server in pairs(getServers()) do

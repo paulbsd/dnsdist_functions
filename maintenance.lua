@@ -4,9 +4,17 @@
 -- setMaintenance('server name', 'DOWN') -- set servers matching pattern down
 
 function load_snippet(filename)
-  f = io.open(filename,"r")
-  code = f:read("a*")
-  bc,e = load(code)
+  local f,err = io.open(filename,"r")
+  if err ~= nil then
+    show(string.format("error loading file %s",filename))
+    return
+  end
+  local code = f:read("a*")
+  local bc, err = load(code)
+  if err ~= nil then
+    show(string.format("error loading code from file %s",filename))
+    return
+  end
   pcall(bc)
 end
 

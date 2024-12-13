@@ -4,7 +4,7 @@
 -- setMaintenance('server name', 'DOWN') -- set servers matching pattern down
 
 function load_snippet(filename)
-  local f,err = io.open(filename,"r")
+  local f, err = io.open(filename,"r")
   if err ~= nil then
     show(string.format("error loading file %s",filename))
     return
@@ -36,15 +36,18 @@ function showServersStatus(pattern)
 end
 
 function setMaintenance(pattern,state)
-  if state == nil then
-    show("default state is set to UP")
-    state = "UP"
+  local states = {["FORCEUP"]=true, ["AUTO"]=true, ["DOWN"]=true}
+  if state == nil or not states[state] then
+    show("please define a state (FORCEUP, AUTO, DOWN)")
+    return
   end
   local servers = getServersByPattern(pattern)
   for _,server in pairs(servers) do
     show(string.format("set %s to status: %s",server.name, state))
-    if state == "UP" then server:setUp()
-    elseif state == "DOWN" then server:setDown() end
+    if state == "FORCEUP" then server:setUp()
+    elseif state == "AUTO" then server:setAuto()
+    elseif state == "DOWN" then server:setDown()
+    end
   end
 end
 

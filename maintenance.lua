@@ -62,10 +62,13 @@ function reload(config_file)
   config_file = config_file or "/etc/dnsdist/dnsdist.conf"
 
   clearRules()
-
-  for i=0,100 do
-    local res = rmResponseRule(0)
-    if res~=nil then break end
+  if clearResponseRules
+    then clearResponseRules()
+  else
+    for i=0,100 do
+      local res = rmResponseRule(0)
+      if res~=nil then break end
+    end
   end
 
   for i,s in pairs(getServers()) do

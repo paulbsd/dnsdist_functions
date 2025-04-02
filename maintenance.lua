@@ -59,7 +59,7 @@ function getStatusStr(server)
 end
 
 function reload(config_file)
-  if config_file == nil then config_file = "/etc/dnsdist/dnsdist.conf" end
+  config_file = config_file or "/etc/dnsdist/dnsdist.conf"
 
   clearRules()
 

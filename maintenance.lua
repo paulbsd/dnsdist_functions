@@ -57,3 +57,20 @@ function getStatusStr(server)
   end
   return "DOWN"
 end
+
+function reload(config_file)
+  if config_file == nil then config_file = "/etc/dnsdist/dnsdist.conf" end
+
+  clearRules()
+
+  for i=0,100 do
+    local res = rmResponseRule(0)
+    if res~=nil then break end
+  end
+
+  for i,s in pairs(getServers()) do
+    rmServer(0)
+  end
+
+  load_snippet(config_file)
+end

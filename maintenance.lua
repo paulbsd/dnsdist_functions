@@ -84,7 +84,7 @@ function reload(config_file)
   load_snippet(config_file)
 
   show("cleanup servers")
-  for s in pairs(old_server_list) do
+  for i,s in pairs(old_server_list) do
     rmServer(s)
   end
 

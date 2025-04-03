@@ -58,22 +58,34 @@ function getStatusStr(server)
   return "DOWN"
 end
 
+-- This function can reload dnsdist (as dnsdist doesn't support it)
+-- We clear current (response)rules, get list of current servers,
+-- then fully reload config and remove old servers
 function reload(config_file)
   config_file = config_file or "/etc/dnsdist/dnsdist.conf"
 
+  show("clear rules")
   clearRules()
-  if clearResponseRules
-    then clearResponseRules()
+
+  show("clear response rules")
+  if clearResponseRules then
+    clearResponseRules()
   else
-    for i=0,100 do
-      local res = rmResponseRule(0)
-      if res~=nil then break end
+    while true do
+      local res, err = pcall(getResponseRule,0)
+      if res then rmResponseRule(0)
+      else break end
     end
   end
 
-  for i,s in pairs(getServers()) do
-    rmServer(0)
+  local old_server_list = getServers()
+
+  show("loading config, adding rules and new servers")
+  load_snippet(config_file)
+
+  show("cleanup servers")
+  for s in pairs(old_server_list) do
+    rmServer(s)
   end
 
-  load_snippet(config_file)
 end

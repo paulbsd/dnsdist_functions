@@ -88,4 +88,6 @@ function reload(config_file)
     rmServer(s)
   end
 
+  collectgarbage("collect")
+
 end
